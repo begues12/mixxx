@@ -1,45 +1,54 @@
-import ".." as Skin
 import QtQuick 2.12
 import QtQuick.Layouts
-import "../Theme"
 
-// Barra superior estilo XDJ: cambio de modo (Performance / Browse /
-// Settings), crossfader/mixer compacto no incluido aquí, y reloj.
+// Barra superior negra estilo Pioneer: título del modo actual,
+// botones de modo planos con resaltado azul y reloj.
 Rectangle {
     id: root
 
-    // 0 = Performance, 1 = Browse, 2 = Settings
+    // 0 = Waveform, 1 = Browse, 2 = Settings
     property int currentMode: 0
 
-    color: Theme.toolbarBackgroundColor
+    color: "#000000"
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: 8
-        anchors.rightMargin: 8
-        spacing: 8
+        spacing: 0
 
-        ModeButton {
-            mode: 0
-            text: qsTr("PERFORM")
-        }
-        ModeButton {
-            mode: 1
-            text: qsTr("BROWSE")
-        }
-        ModeButton {
-            mode: 2
-            text: qsTr("SETTINGS")
+        Text {
+            Layout.leftMargin: 16
+            Layout.preferredWidth: 170
+            color: "#ffffff"
+            font.bold: true
+            font.letterSpacing: 2
+            font.pixelSize: 20
+            text: ["WAVEFORM", "BROWSE", "SETTINGS"][root.currentMode]
         }
         Item {
             Layout.fillWidth: true
         }
+        ModeButton {
+            mode: 0
+            text: "WAVEFORM"
+        }
+        ModeButton {
+            mode: 1
+            text: "BROWSE"
+        }
+        ModeButton {
+            mode: 2
+            text: "SETTINGS"
+        }
+        Item {
+            Layout.preferredWidth: 16
+        }
         Text {
             id: clock
 
-            color: Theme.white
+            Layout.rightMargin: 16
+            color: "#ffffff"
             font.bold: true
-            font.pixelSize: 18
+            font.pixelSize: 16
 
             Timer {
                 interval: 1000
@@ -51,18 +60,34 @@ Rectangle {
             }
         }
     }
+    Rectangle {
+        anchors.bottom: parent.bottom
+        color: "#2a2a2a"
+        height: 1
+        width: parent.width
+    }
 
-    component ModeButton: Skin.Button {
+    component ModeButton: Rectangle {
         required property int mode
+        property alias text: label.text
+        readonly property bool active: root.currentMode === mode
 
         Layout.fillHeight: true
-        Layout.preferredWidth: 110
-        Layout.topMargin: 4
-        Layout.bottomMargin: 4
-        activeColor: Theme.white
-        checkable: false
-        highlight: root.currentMode === mode
+        color: active ? "#0d84ff" : "#000000"
+        implicitWidth: 120
 
-        onClicked: root.currentMode = mode
+        Text {
+            id: label
+
+            anchors.centerIn: parent
+            color: parent.active ? "#ffffff" : "#8a8a8a"
+            font.bold: true
+            font.pixelSize: 13
+        }
+        MouseArea {
+            anchors.fill: parent
+
+            onClicked: root.currentMode = parent.mode
+        }
     }
 }

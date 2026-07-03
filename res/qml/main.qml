@@ -17,7 +17,7 @@ ApplicationWindow {
     readonly property int numSamplers: 0
     readonly property int waveformOverviewTypeRgb: 2
 
-    color: Theme.backgroundColor
+    color: "#000000"
     height: 800
     minimumHeight: 480
     minimumWidth: 800

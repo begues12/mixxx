@@ -1,13 +1,25 @@
 import ".." as Skin
 import QtQuick 2.12
-import "../Theme"
+import QtQuick.Layouts
 
-// Modo Browser: reutiliza la biblioteca QML de Mixxx (incluye la
-// fuente Rekordbox para USB exportados) a pantalla completa.
-Item {
+// Modo BROWSE estilo Pioneer: biblioteca (con la fuente Rekordbox
+// para USB) y franja inferior con el estado de los decks.
+Rectangle {
     id: root
 
-    Skin.Library {
+    color: "#000000"
+
+    ColumnLayout {
         anchors.fill: parent
+        spacing: 2
+
+        Skin.Library {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+        }
+        DeckStrip {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 78
+        }
     }
 }
