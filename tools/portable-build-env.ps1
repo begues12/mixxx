@@ -8,7 +8,10 @@
 #
 # Adjust the *_VER variables below if you extracted different SDK/MSVC versions.
 
-$ErrorActionPreference = "Stop"
+# NOTE: intentionally do NOT set $ErrorActionPreference = "Stop" here. This
+# script is dot-sourced, so that setting would leak into the caller's session
+# and turn every cmake/ninja *stderr warning* (which PowerShell wraps as a
+# NativeCommandError) into a terminating error, aborting the build spuriously.
 
 $LlvmRoot   = "C:\bin\llvm"
 $Sdk        = "C:\bin\winsdk"
