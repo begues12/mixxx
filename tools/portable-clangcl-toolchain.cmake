@@ -30,3 +30,13 @@ set(CMAKE_CXX_COMPILER_TARGET x86_64-pc-windows-msvc)
 # CMakeLists rejects, and which would also mismatch the vcpkg deps' ABI.
 string(APPEND CMAKE_C_FLAGS_INIT " -fmsc-version=1944")
 string(APPEND CMAKE_CXX_FLAGS_INIT " -fmsc-version=1944")
+
+# protobuf's port_def.inc enables `constinit` on any compiler that defines
+# both _MSC_VER and __clang__ (i.e. clang-cl), taking the non-MSVC path, but
+# real MSVC gets an *empty* PROTOBUF_CONSTINIT. clang then actually enforces
+# constinit on the generated .pb.cc default-instance tables and rejects them
+# ("variable does not have a constant initializer"), whereas MSVC never
+# checked. PROTOBUF_CONSTINIT can't be overridden (#error guard), so instead
+# neutralize the keyword itself: this only drops the compile-time-init *check*
+# (a variable may fall back to runtime static init), never changing semantics.
+string(APPEND CMAKE_CXX_FLAGS_INIT " -Dconstinit=")
